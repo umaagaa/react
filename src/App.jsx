@@ -1,24 +1,37 @@
 import React, { useState } from 'react';
-import moviesData from './helpers/movies'; // Pravilno importujemo moviesData iz movies.js
-import Card from './components/Card'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import movies from './helpers/movies';
+import Card from './components/Card';
+import MovieDetails from './components/MovieDetails';
 
 const App = () => {
-  const [movies, setMovies] = useState(moviesData); // Inicijaliziramo movies sa moviesData
-
-  const handleDelete = (id) => {
-    const updatedMovies = movies.filter((movie) => movie.id !== id);
-    setMovies(updatedMovies);
-  };
+  const [moviesList] = useState(movies);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Movies Gallery</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        {movies.map((movie) => (
-          <Card key={movie.id} movie={movie} onDelete={() => handleDelete(movie.id)} />
-        ))}
+    <Router>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Movies Gallery</h1>
+        <Routes>
+          {}
+          <Route
+            path="/"
+            element={
+              moviesList.length === 0 ? (
+                <p className="text-center text-lg text-gray-500">There is no movie to display.</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {moviesList.map((movie) => (
+                    <Card key={movie.id} movie={movie} />
+                  ))}
+                </div>
+              )
+            }
+          />
+          {/* Ruta za detalje o filmu */}
+          <Route path="/details/:id" element={<MovieDetails movies={moviesList} />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 };
 
