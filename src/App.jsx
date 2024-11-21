@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import moviesData from './helpers/movies';
 import Card from './components/Card';
 import MovieDetails from './components/MovieDetails';
@@ -11,12 +11,18 @@ const App = () => {
     setMoviesList((prev) => prev.filter((movie) => movie.id !== id));
   };
 
+  const Header = () => {
+    const location = useLocation();
+    return location.pathname === '/' ? (
+      <h1 className="text-2xl font-bold mb-4">Movies Gallery</h1>
+    ) : null;
+  };
+
   return (
     <Router>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Movies Gallery</h1>
+        <Header />
         <Routes>
-          {}
           <Route
             path="/"
             element={
@@ -31,7 +37,6 @@ const App = () => {
               )
             }
           />
-          {}
           <Route path="/details/:id" element={<MovieDetails moviesList={moviesList} />} />
         </Routes>
       </div>

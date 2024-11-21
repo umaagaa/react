@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Card = ({ movie }) => {
-  const { id, title, vote_average, poster_path } = movie;
+  const { id, title, vote_average, vote_count, poster_path } = movie;
   const navigate = useNavigate();
 
   const image = poster_path
@@ -14,7 +14,14 @@ const Card = ({ movie }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow cursor-pointer" onClick={handleCardClick}>
+    <div
+      className="bg-white p-4 rounded shadow relative cursor-pointer hover:shadow-lg transition-shadow duration-300"
+      onClick={handleCardClick}
+    >
+      {}
+      <span className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
+        {vote_count} votes
+      </span>
       <img src={image} alt={title} className="min-h-[308px] mb-2 rounded" />
       <h2 className="text-lg font-semibold">{title}</h2>
       <p>Rating: {vote_average.toFixed(1)}</p>

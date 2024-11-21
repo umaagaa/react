@@ -34,6 +34,8 @@ const MovieDetails = ({ moviesList }) => {
         className="rounded mb-4"
       />
       <p className="text-lg">Rating: {movie.vote_average.toFixed(1)}</p>
+      <p className="text-lg">Votes: {movie.vote_count}</p>
+      <p className="text-lg">Release Date: {movie.release_date}</p>
       <p className="text-gray-600 mt-2">{movie.overview}</p>
       <button
         onClick={() => navigate('/')}
