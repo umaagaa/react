@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import movies from './helpers/movies';
+import moviesData from './helpers/movies';
 import Card from './components/Card';
 import MovieDetails from './components/MovieDetails';
 
 const App = () => {
-  const [moviesList] = useState(movies);
+  const [moviesList, setMoviesList] = useState(moviesData);
+
+  const handleDelete = (id) => {
+    setMoviesList((prev) => prev.filter((movie) => movie.id !== id));
+  };
 
   return (
     <Router>
@@ -21,14 +25,14 @@ const App = () => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {moviesList.map((movie) => (
-                    <Card key={movie.id} movie={movie} />
+                    <Card key={movie.id} movie={movie} onDelete={handleDelete} />
                   ))}
                 </div>
               )
             }
           />
-          {/* Ruta za detalje o filmu */}
-          <Route path="/details/:id" element={<MovieDetails movies={moviesList} />} />
+          {}
+          <Route path="/details/:id" element={<MovieDetails moviesList={moviesList} />} />
         </Routes>
       </div>
     </Router>
