@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Card = ({ movie }) => {
-  const { id, title, vote_average, vote_count, poster_path } = movie;
+const Card = ({ item, type }) => {
+  const { id, title, vote_average, vote_count, poster_path } = item;
   const navigate = useNavigate();
 
   const image = poster_path
@@ -10,7 +10,7 @@ const Card = ({ movie }) => {
     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s';
 
   const handleCardClick = () => {
-    navigate(`/details/${id}`);
+    navigate(`/${type}/details/${id}`);
   };
 
   return (
@@ -18,7 +18,6 @@ const Card = ({ movie }) => {
       className="bg-white p-4 rounded shadow relative cursor-pointer hover:shadow-lg transition-shadow duration-300"
       onClick={handleCardClick}
     >
-      {}
       <span className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
         {vote_count} votes
       </span>
