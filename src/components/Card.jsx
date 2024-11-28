@@ -10,7 +10,7 @@ const Card = ({ item, type }) => {
     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s';
 
   const handleCardClick = () => {
-    navigate(`/${type}/details/${id}`);
+    navigate(`/details/${type}/${id}`); 
   };
 
   return (

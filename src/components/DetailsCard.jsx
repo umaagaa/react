@@ -1,11 +1,12 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const MovieDetails = ({ itemsList }) => {
-  const { id } = useParams();
+const DetailsCard = ({ moviesList, showsList }) => {
+  const { type, id } = useParams();
   const navigate = useNavigate();
 
-  const item = itemsList.find((i) => i.id.toString() === id);
+  const list = type === 'movies' ? moviesList : showsList;
+  const item = list.find((i) => i.id.toString() === id);
 
   if (!item) {
     return (
@@ -28,7 +29,7 @@ const MovieDetails = ({ itemsList }) => {
         src={
           item.poster_path
             ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s'
+            : 'https://via.placeholder.com/500x750?text=No+Image'
         }
         alt={item.title}
         className="rounded mb-4"
@@ -47,4 +48,4 @@ const MovieDetails = ({ itemsList }) => {
   );
 };
 
-export default MovieDetails;
+export default DetailsCard;
