@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Card = ({ item, type }) => {
+  if (!item) return null;  
+
   const { id, title, vote_average, vote_count, poster_path } = item;
   const navigate = useNavigate();
 
@@ -10,7 +12,7 @@ const Card = ({ item, type }) => {
     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNNLEL-qmmLeFR1nxJuepFOgPYfnwHR56vcw&s';
 
   const handleCardClick = () => {
-    navigate(`/details/${type}/${id}`); 
+    navigate(`/${type}/details/${id}`);
   };
 
   return (
