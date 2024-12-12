@@ -40,7 +40,7 @@ const ToDoContainer = () => {
         title,
         description,
       };
-      setTasks((prevTasks) => [...prevTasks, newTask]); // Add the new task to the list
+      setTasks((prevTasks) => [newTask, ...prevTasks]); // Add the new task to the top of the list
     }
 
     // Clear the input fields
@@ -58,7 +58,7 @@ const ToDoContainer = () => {
     setIsEditing(true); // Enter editing mode
     setCurrentTaskId(task.id); // Set the task ID being edited
     setTitle(task.title); // Populate the title input with the task's title
-    setDescription(task.description || ""); // Populate the description input (or set it as empty if missing)
+    setDescription(task.description || ""); // Populate the description input 
   };
 
   return (
@@ -112,9 +112,8 @@ const ToDoContainer = () => {
               >
                 Edit
               </button>
-              
-              {/* Delete button */}
 
+              {/* Delete button */}
               <button
                 onClick={() => handleDeleteTask(task.id)} // Delete the specified task
                 className="bg-red-500 text-white px-3 py-1 rounded"
@@ -129,4 +128,4 @@ const ToDoContainer = () => {
   );
 };
 
-export default ToDoContainer; 
+export default ToDoContainer;
