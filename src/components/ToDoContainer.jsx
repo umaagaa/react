@@ -1,129 +1,125 @@
 import React, { useState } from "react"; 
 
 const ToDoContainer = () => {
-  // State to store the list of tasks
+  // States
   const [tasks, setTasks] = useState([]);
-
-  // State to store the current task's title
   const [title, setTitle] = useState("");
-
-  // State to store the current task's description
   const [description, setDescription] = useState("");
-
-  // State to determine if the user is editing an existing task
   const [isEditing, setIsEditing] = useState(false);
-
-  // State to store the ID of the task currently being edited
   const [currentTaskId, setCurrentTaskId] = useState(null);
 
-  // Function to handle adding or updating a task
+  // Add or update a task
   const handleAddTask = () => {
-    if (!title.trim()) {
-      // Prevent adding a task with an empty title
-      alert("Task title cannot be empty!");
+    if (!title.trim() || title.length < 3) {
+      alert("Task title must be at least 3 characters long!");
       return;
     }
 
     if (isEditing) {
-      // Update an existing task
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === currentTaskId ? { ...task, title, description } : task
         )
       );
-      setIsEditing(false); // Exit editing mode
-      setCurrentTaskId(null); // Clear the current editing task ID
+      setIsEditing(false);
+      setCurrentTaskId(null);
     } else {
-      // Create a new task
       const newTask = {
-        id: Date.now(), // Unique ID based on the current timestamp
+        id: Date.now(),
         title,
         description,
       };
-      setTasks((prevTasks) => [newTask, ...prevTasks]); // Add the new task to the top of the list
+      setTasks((prevTasks) => [newTask, ...prevTasks]);
     }
 
-    // Clear the input fields
     setTitle("");
     setDescription("");
   };
 
-  // Function to delete a task
+  // Delete a task
   const handleDeleteTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Remove the task with the specified ID
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
-  // Function to edit a task
+  // Edit a task
   const handleEditTask = (task) => {
-    setIsEditing(true); // Enter editing mode
-    setCurrentTaskId(task.id); // Set the task ID being edited
-    setTitle(task.title); // Populate the title input with the task's title
-    setDescription(task.description || ""); // Populate the description input 
+    setIsEditing(true);
+    setCurrentTaskId(task.id);
+    setTitle(task.title);
+    setDescription(task.description || "");
   };
+
+  // Check if Add Task button should be enabled
+  const isAddButtonDisabled = !title.trim() || title.length < 3;
 
   return (
-    <div className="p-4">
-      {/* Title of the component */}
-      <h1 className="text-xl font-bold mb-4">To-Do List</h1>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="w-1/2 p-4 bg-white rounded shadow absolute left-1/4 right-1/4 top-20"> 
+        <h1 className="text-xl font-bold mb-4 text-center">To-Do List</h1>
 
-      {/* Input fields and button for adding/updating tasks */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Task Title"
-          className="w-full border rounded p-2 mb-2"
-          value={title} // Controlled input for the task title
-          onChange={(e) => setTitle(e.target.value)} // Update the title state on input change
-        />
-        <textarea
-          placeholder="Task Description (optional)"
-          className="w-full border rounded p-2 mb-2"
-          value={description} // Controlled input for the task description
-          onChange={(e) => setDescription(e.target.value)} // Update the description state on input change
-        />
-        <button
-          onClick={handleAddTask} // Trigger add or update task logic
-          className={`${
-            isEditing ? "bg-blue-500" : "bg-green-500" // Change button color based on editing state
-          } text-white px-4 py-2 rounded`}
-        >
-          {isEditing ? "Update Task" : "Add Task"} {/* Display button label based on editing state */}
-        </button>
-      </div>
+        {/* Task List */}
+        <ul className="space-y-2 mb-6">
+          {tasks.map((task) => (
+            <li
+              key={task.id}
+              className="border rounded p-4 bg-gray-100 flex justify-between items-center"
+            >
+              <div>
+                <h2 className="font-bold">{task.title}</h2>
+                {task.description && <p>{task.description}</p>}
+              </div>
+              <div className="space-x-2">
+              <button onClick={() => handleEditTask(task)} className="text-yellow-500">
+              <svg class="h-8 w-8"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  
+                <path stroke="none" d="M0 0h24v24H0z"/> 
+                 <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  
+                 <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  
+                 <line x1="16" y1="5" x2="19" y2="8" />
+                 </svg>
+                  </button>
+                <button
+                  onClick={() => handleDeleteTask(task.id)}
+                  className="text-red-500"
+                >
+                  <svg class="h-8 w-8 "  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-      {/* List of tasks */}
-      <ul className="space-y-2">
-        {tasks.map((task) => (
-          <li
-            key={task.id} // Unique key for each task
-            className="border rounded p-4 bg-gray-100 flex justify-between items-center"
+        {/* Task Input Form */}
+        <div>
+          <input
+            type="text"
+            placeholder="Task Title"
+            className="w-full border rounded p-2 mb-2"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <textarea
+            placeholder="Task Description (optional)"
+            className="w-full border rounded p-2 mb-2"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <button
+            onClick={handleAddTask}
+            disabled={isAddButtonDisabled} // Disable button if title is invalid
+            className={`w-full px-4 py-2 rounded text-white ${
+              isAddButtonDisabled
+                ? "bg-gray-300 cursor-not-allowed"
+                : isEditing
+                ? "bg-blue-500"
+                : "bg-purple-600"
+            }`}
           >
-            <div>
-              {/* Task title */}
-              <h2 className="font-bold">{task.title}</h2>
-              {/* Task description, if available */}
-              {task.description && <p>{task.description}</p>}
-            </div>
-            <div className="space-x-2">
-              {/* Edit button */}
-              <button
-                onClick={() => handleEditTask(task)} // Set the task for editing
-                className="bg-yellow-300 text-white px-3 py-1 rounded"
-              >
-                Edit
-              </button>
-
-              {/* Delete button */}
-              <button
-                onClick={() => handleDeleteTask(task.id)} // Delete the specified task
-                className="bg-red-500 text-white px-3 py-1 rounded"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+            {isEditing ? "Update Task" : "Add Task"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
