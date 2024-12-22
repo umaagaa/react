@@ -29,6 +29,8 @@ const ToDoContainer = () => {
     );
     if (titleExists) {
       alert("A task with this title already exists!");
+      setTitle(""); // Clear the title input
+      setDescription(""); // Clear the description input
       return;
     }
 
@@ -49,8 +51,8 @@ const ToDoContainer = () => {
       setTasks((prevTasks) => [newTask, ...prevTasks]);
     }
 
-    setTitle("");
-    setDescription("");
+    setTitle(""); // Clear the title input
+    setDescription(""); // Clear the description input
   };
 
   const handleDeleteTask = (id) => {
