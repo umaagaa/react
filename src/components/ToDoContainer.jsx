@@ -23,6 +23,15 @@ const ToDoContainer = () => {
       return;
     }
 
+    // Check if a task with the same title already exists
+    const titleExists = tasks.some(
+      (task) => task.title.toLowerCase() === title.toLowerCase()
+    );
+    if (titleExists) {
+      alert("A task with this title already exists!");
+      return;
+    }
+
     if (isEditing) {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
@@ -98,7 +107,7 @@ const ToDoContainer = () => {
                   className="text-red-500"
                 >
                   <svg
-                    className="h-8 w-8 "
+                    className="h-8 w-8"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
