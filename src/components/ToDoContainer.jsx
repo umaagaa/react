@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 const ToDoContainer = () => {
-  // Load tasks from localStorage or start with an empty array
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
     return storedTasks ? JSON.parse(storedTasks) : [];
@@ -12,7 +11,6 @@ const ToDoContainer = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState(null);
 
-  // Save tasks to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -23,14 +21,13 @@ const ToDoContainer = () => {
       return;
     }
 
-    // Check if a task with the same title already exists
     const titleExists = tasks.some(
       (task) => task.title.toLowerCase() === title.toLowerCase()
     );
     if (titleExists) {
       alert("A task with this title already exists!");
-      setTitle(""); // Clear the title input
-      setDescription(""); // Clear the description input
+      setTitle("");
+      setDescription("");
       return;
     }
 
@@ -47,12 +44,13 @@ const ToDoContainer = () => {
         id: Date.now(),
         title,
         description,
+        isCompleted: false,
       };
       setTasks((prevTasks) => [newTask, ...prevTasks]);
     }
 
-    setTitle(""); // Clear the title input
-    setDescription(""); // Clear the description input
+    setTitle("");
+    setDescription("");
   };
 
   const handleDeleteTask = (id) => {
@@ -66,6 +64,14 @@ const ToDoContainer = () => {
     setDescription(task.description || "");
   };
 
+  const toggleTaskCompletion = (id) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
+      )
+    );
+  };
+
   const isAddButtonDisabled = !title.trim() || title.length < 3;
 
   return (
@@ -73,16 +79,39 @@ const ToDoContainer = () => {
       <div className="w-1/2 p-4 bg-white rounded shadow absolute left-1/4 right-1/4 top-20">
         <h1 className="text-xl font-bold mb-4 text-center">To-Do List</h1>
 
+        {/* Task Count */}
+        <p className="text-center mb-4">
+          {tasks.length > 0
+            ? `You have ${tasks.length} task${tasks.length > 1 ? "s" : ""}.`
+            : "No tasks to show."}
+        </p>
+
         {/* Task List */}
         <ul className="space-y-2 mb-6">
           {tasks.map((task) => (
             <li
               key={task.id}
-              className="border rounded p-4 bg-gray-100 flex justify-between items-center"
+              className={`border rounded p-4 bg-gray-100 flex justify-between items-center ${
+                task.isCompleted ? "bg-red-100" : ""
+              }`}
             >
-              <div>
-                <h2 className="font-bold">{task.title}</h2>
-                {task.description && <p>{task.description}</p>}
+              <div onClick={() => toggleTaskCompletion(task.id)} className="cursor-pointer">
+                <h2
+                  className={`font-bold ${
+                    task.isCompleted ? "line-through text-gray-500" : ""
+                  }`}
+                >
+                  {task.title}
+                </h2>
+                {task.description && (
+                  <p
+                    className={`${
+                      task.isCompleted ? "line-through text-gray-500" : ""
+                    }`}
+                  >
+                    {task.description}
+                  </p>
+                )}
               </div>
               <div className="space-x-2">
                 <button
