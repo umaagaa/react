@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const ToDoContainer = () => {
+  // States
   const [tasks, setTasks] = useState(() => {
     const storedTasks = localStorage.getItem("tasks");
     return storedTasks ? JSON.parse(storedTasks) : [];
@@ -10,6 +11,8 @@ const ToDoContainer = () => {
   const [description, setDescription] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState(null);
+  const [filter, setFilter] = useState("all"); // Filter dropdown
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -74,6 +77,18 @@ const ToDoContainer = () => {
 
   const isAddButtonDisabled = !title.trim() || title.length < 3;
 
+  // Filter tasks based on dropdown and search query
+  const filteredTasks = tasks.filter((task) => {
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "completed" && task.isCompleted) ||
+      (filter === "not_completed" && !task.isCompleted);
+    const matchesSearch =
+      searchQuery === "" ||
+      task.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-1/2 p-4 bg-white rounded shadow absolute left-1/4 right-1/4 top-20">
@@ -81,21 +96,54 @@ const ToDoContainer = () => {
 
         {/* Task Count */}
         <p className="text-center mb-4">
-          {tasks.length > 0
-            ? `You have ${tasks.length} task${tasks.length > 1 ? "s" : ""}.`
+          {filteredTasks.length > 0
+            ? `You have ${filteredTasks.length} task${
+                filteredTasks.length > 1 ? "s" : ""
+              }.`
             : "No tasks to show."}
         </p>
 
+        {/* Search Bar */}
+        <div className="w-full flex items-center justify-between mb-4">
+          <input
+            type="text"
+            placeholder="Search tasks..."
+            className="w-30 border rounded p-2"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          {/* Filtering Tasks */}
+          <div className="flex items-center ml-auto">
+            <label htmlFor="filter" className="mr-2 font-medium">
+              Filter:
+            </label>
+            <select
+              id="filter"
+              className="border rounded p-2"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="completed">Completed</option>
+              <option value="not_completed">Not Completed</option>
+            </select>
+          </div>
+        </div>
+
         {/* Task List */}
         <ul className="space-y-2 mb-6">
-          {tasks.map((task) => (
+          {filteredTasks.map((task) => (
             <li
               key={task.id}
               className={`border rounded p-4 bg-gray-100 flex justify-between items-center ${
                 task.isCompleted ? "bg-red-100" : ""
               }`}
             >
-              <div onClick={() => toggleTaskCompletion(task.id)} className="cursor-pointer">
+              <div
+                onClick={() => toggleTaskCompletion(task.id)}
+                className="cursor-pointer"
+              >
                 <h2
                   className={`font-bold ${
                     task.isCompleted ? "line-through text-gray-500" : ""
@@ -114,25 +162,27 @@ const ToDoContainer = () => {
                 )}
               </div>
               <div className="space-x-2">
-                <button
-                  onClick={() => handleEditTask(task)}
-                  className="text-yellow-500"
-                >
-                  <svg
-                    className="h-8 w-8"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                {!task.isCompleted && (
+                  <button
+                    onClick={() => handleEditTask(task)}
+                    className="text-yellow-500"
                   >
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
-                    <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
-                    <line x1="16" y1="5" x2="19" y2="8" />
-                  </svg>
-                </button>
+                    <svg
+                      className="h-8 w-8"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" />
+                      <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
+                      <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                      <line x1="16" y1="5" x2="19" y2="8" />
+                    </svg>
+                  </button>
+                )}
                 <button
                   onClick={() => handleDeleteTask(task.id)}
                   className="text-red-500"
