@@ -1,13 +1,13 @@
 import React from "react";
 
-const Task = ({ task, onEdit, onDelete, onToggle }) => {
+const Task = ({ task, onEdit, onDelete, onTaskComplete }) => {
   return (
     <li
       className={`border rounded p-4 bg-gray-100 flex justify-between items-center ${
         task.isCompleted ? "bg-red-100" : ""
       }`}
     >
-      <div onClick={() => onToggle(task.id)} className="cursor-pointer">
+      <div onClick={() => onTaskComplete(task.id)} className="cursor-pointer">
         <h2
           className={`font-bold ${
             task.isCompleted ? "line-through text-gray-500" : ""
